@@ -1,0 +1,6 @@
+body.bg-gradient {
+  background: linear-gradient(135deg,#f7f9fc,#e9f2ff);
+  min-height:100vh;
+}
+.card { border-radius: 16px; }
+textarea { resize: none; }
