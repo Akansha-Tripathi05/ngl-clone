@@ -1,4 +1,4 @@
-<!-- <!doctype html>
+<!-- <!-- <!doctype html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -89,7 +89,7 @@ if(document.querySelector('#messages .card')) {
 
 </body>
 </html> -->
-<!doctype html>
+<!-- <!doctype html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -177,5 +177,87 @@ setInterval(()=>{
 }, 8000);
 </script>
 
+</body>
+</html> --> 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Messages</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        table {
+            font-size: 0.9rem;
+        }
+        .table-responsive {
+            max-height: 75vh;
+            overflow-y: auto;
+        }
+        .username {
+            font-weight: bold;
+        }
+        .timestamp {
+            font-size: 0.8rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Admin Panel - Latest Messages</h2>
+            <div>
+                <a href="{{ url_for('generate_link') }}" class="btn btn-primary btn-sm">Generate Shareable Link</a>
+                <a href="{{ url_for('admin_logout') }}" class="btn btn-danger btn-sm">Logout</a>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Username / Fingerprint</th>
+                        <th>Message</th>
+                        <th>Device Type</th>
+                        <th>Device Model</th>
+                        <th>Browser</th>
+                        <th>OS / Version</th>
+                        <th>IP Address</th>
+                        <th>Location</th>
+                        <th>Timezone</th>
+                        <th>ISP</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for msg in messages %}
+                    <tr>
+                        <td>{{ msg.id }}</td>
+                        <td class="username">{{ msg.username }}</td>
+                        <td>{{ msg.content }}</td>
+                        <td>{{ msg.device_type or '-' }}</td>
+                        <td>{{ msg.device_model or '-' }}</td>
+                        <td>{{ msg.browser or '-' }}</td>
+                        <td>{{ msg.os or '-' }} {{ msg.os_version or '' }}</td>
+                        <td>{{ msg.ip_address or '-' }}</td>
+                        <td>{{ msg.location_city or '-' }}, {{ msg.location_country or '-' }}</td>
+                        <td>{{ msg.timezone or '-' }}</td>
+                        <td>{{ msg.isp or '-' }}</td>
+                        <td class="timestamp">{{ msg.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
