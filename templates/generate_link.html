@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Generate Your Link</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { padding: 24px; background: linear-gradient(135deg,#f7f9fc,#e9f2ff); min-height: 100vh; }
+    .share-box { 
+      background: #f8f9fa; 
+      padding: 16px; 
+      border-radius: 8px; 
+      border: 1px solid #dee2e6;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" style="max-width: 700px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3>Generate Your Anonymous Message Link</h3>
+      <a href="{{ url_for('admin_panel') }}" class="btn btn-outline-secondary">Back to Messages</a>
+    </div>
+
+    {% if share_link %}
+      <div class="card shadow mb-4">
+        <div class="card-body">
+          <h5 class="card-title text-success mb-3">✓ Your link is ready!</h5>
+          <p class="text-muted mb-2">Share this link on your Instagram bio, WhatsApp status, or anywhere:</p>
+          
+          <div class="share-box mb-3">
+            <strong id="shareLink">{{ share_link }}</strong>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary" onclick="copyLink()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+              </svg>
+              Copy Link
+            </button>
+            <button class="btn btn-success" onclick="window.open('{{ share_link }}', '_blank')">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+              </svg>
+              Open Link
+            </button>
+          </div>
+
+          <div id="copyFeedback" class="alert alert-success mt-3" style="display:none;">
+            ✓ Link copied to clipboard!
+          </div>
+
+          <hr class="my-4">
+
+          <h6 class="mb-2">How to use:</h6>
+          <ol class="text-muted small mb-0">
+            <li>Copy the link above</li>
+            <li>Add it to your Instagram bio or share on WhatsApp/Stories</li>
+            <li>People who click it can send you anonymous messages</li>
+            <li>All messages for @{{ username }} will appear in your admin panel</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <a href="{{ url_for('generate_link') }}" class="btn btn-outline-primary">Generate Another Link</a>
+      </div>
+    {% else %}
+      <div class="card shadow">
+        <div class="card-body">
+          <p class="text-muted mb-3">Enter your Instagram username to generate a shareable link:</p>
+          
+          <form method="post">
+            <div class="mb-3">
+              <label for="username" class="form-label">Your Instagram Username</label>
+              <div class="input-group">
+                <span class="input-group-text">@</span>
+                <input 
+                  type="text" 
+                  class="form-control form-control-lg" 
+                  id="username" 
+                  name="username" 
+                  placeholder="your_username" 
+                  required
+                  pattern="[a-zA-Z0-9._]+"
+                  title="Username should only contain letters, numbers, dots, and underscores"
+                >
+              </div>
+              <div class="form-text">Enter your Instagram username without the @ symbol</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg">Generate Link</button>
+          </form>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <script>
+    function copyLink() {
+      const link = document.getElementById('shareLink').textContent;
+      navigator.clipboard.writeText(link).then(() => {
+        const feedback = document.getElementById('copyFeedback');
+        feedback.style.display = 'block';
+        setTimeout(() => {
+          feedback.style.display = 'none';
+        }, 3000);
+      });
+    }
+  </script>
+</body>
+</html>

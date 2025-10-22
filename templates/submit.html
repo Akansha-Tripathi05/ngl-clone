@@ -73,7 +73,7 @@
   </body>
 </html> -->
 
-<!doctype html>
+<!-- <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -137,6 +137,88 @@
           if(json.status === 'ok') {
             result.innerHTML = `<div class="alert alert-success">Message sent successfully!.</div>`;
             form.reset();
+            // Clear success message after 3 seconds
+            setTimeout(() => {
+              result.innerHTML = '';
+            }, 3000);
+          } else {
+            result.innerHTML = `<div class="alert alert-danger">${json.message || 'Error sending message. Please try again.'}</div>`;
+          }
+        } catch(error) {
+          result.innerHTML = `<div class="alert alert-danger">Network error. Please check your connection and try again.</div>`;
+        }
+      });
+    </script>
+  </body>
+</html> -->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Leave an anonymous message</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  </head>
+  <body class="bg-gradient">
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card shadow-lg">
+            <div class="card-body p-4">
+              {% if target_username %}
+                <h3 class="card-title mb-3">Send a message to @{{ target_username }}</h3>
+                <p class="text-muted small">Your message will be completely anonymous.</p>
+              {% else %}
+                <h3 class="card-title mb-3">Send an anonymous message</h3>
+                <p class="text-muted small">Your message will be completely anonymous.</p>
+              {% endif %}
+
+              <form id="msgForm">
+                <input type="hidden" id="username" name="username" value="{{ target_username or '' }}" />
+                <div class="mb-3">
+                  <textarea class="form-control form-control-lg" id="message" name="message" rows="4" placeholder="Type your message..." required></textarea>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                  <button type="submit" class="btn btn-primary btn-lg">Send Anonymously</button>
+                </div>
+              </form>
+
+              <div id="result" class="mt-3"></div>
+            </div>
+          </div>
+
+          {% if target_username %}
+            <p class="text-center text-muted small mt-3">Your message to @{{ target_username }} is completely anonymous.</p>
+          {% else %}
+            <p class="text-center text-muted small mt-3">Your message is completely anonymous. We respect your privacy.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById('msgForm');
+      const result = document.getElementById('result');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        
+        try {
+          const res = await fetch('/submit', {
+            method: 'POST',
+            body: formData
+          });
+          const json = await res.json();
+          
+          if(json.status === 'ok') {
+            result.innerHTML = `<div class="alert alert-success">Message sent successfully!</div>`;
+            form.reset();
+            // Restore username after reset
+            document.getElementById('username').value = "{{ target_username or '' }}";
             // Clear success message after 3 seconds
             setTimeout(() => {
               result.innerHTML = '';
